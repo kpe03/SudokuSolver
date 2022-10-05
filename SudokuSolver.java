@@ -1,3 +1,5 @@
+//Solves a typical 9x9 sudoku puzzle.
+//Contains a convertToInt method because all values in the puzzle are stored as char
 import java.util.Scanner;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -7,9 +9,9 @@ public class SudokuSolver {
 
 	public static void main(String[] args) {
 
-		String fileName = "";										//filename
+		String fileName = "";						//filename
 		Vector<Character> puzzleVector = new Vector<Character>();	//vector to hold puzzle data
-		char[][] puzzleArray;										//array to hold/display puzzle
+		char[][] puzzleArray;						//array to hold/display puzzle
 			
 		System.out.println("Sudoku Solver\n");
 		
@@ -28,14 +30,17 @@ public class SudokuSolver {
 			File inputFile = new File(fileName);
 			Scanner f = new Scanner(inputFile);
 			while(f.hasNext()) {
-				puzzleVector.addElement(f.next().charAt(0));		//get the next number/character in the file 
-																	// and put it in the vector
+				//store the next number/character in puzzleVector
+				puzzleVector.addElement(f.next().charAt(0));		
 			}
-			//trim the vector and find the dimensions(square root)
+			 
+			//trim the vector and find the dimensions of the puzzle and instantiate 2D array with dimensions
 			puzzleVector.trimToSize();
 			double dimension = Math.sqrt((puzzleVector.capacity()));
-			puzzleArray = new char[(int)dimension][(int)dimension];	//initialize the puzzle array with dimensions
-			toArray(puzzleArray, puzzleVector, (int)dimension);		//put vector into a 2-D array
+			puzzleArray = new char[(int)dimension][(int)dimension];	
+			
+			//put vector into 2D array
+			toArray(puzzleArray, puzzleVector, (int)dimension);		
 			
 			//display the array
 			displayUnsolved(puzzleArray, (int)dimension);
@@ -55,6 +60,7 @@ public class SudokuSolver {
 				System.out.println("Unsolvable board.");
 			}
 			
+			//get final execution time
 			long t2 = System.currentTimeMillis(); 	//timer
 			System.out.println("The elapsed time  is " + (t2-t1)/1000. + " seconds.");
 
@@ -93,12 +99,10 @@ public class SudokuSolver {
 						}
 					}
 					return false;
-					
 				}
 			}
 		}
 		return true;
-		
 	}
 	/***************************
 	 * isCompletePuzzle method *
@@ -143,19 +147,7 @@ public class SudokuSolver {
 		}
 		return false;
 		
-	}
-	/*************************
-	 * isSolvedPuzzle method *
-	 *************************/
-	public static boolean isSolvedPuzzle(char[][] array, int row, int column, int number, int dimension) {
-		if(isCompletePuzzle(array) && isValidPuzzle(array, row, column, number, dimension)) {
-			return true;
-		}
-		else {
-			return false;
-		}
-	}
-	
+	}	
 	/***********************
 	 * convertToInt method *
 	 ***********************/
@@ -192,9 +184,9 @@ public class SudokuSolver {
 		}
 		return array;
 	}
-	/***********************
-	 * displayArray method *
-	 ***********************/
+	/*******************************************
+	 * displayArray and displayUnsolved method *
+	 *******************************************/
 	public static void displayArray(char[][] array, int dimension) {
 		
 		for(int i = 0; i < array.length; i++) {
