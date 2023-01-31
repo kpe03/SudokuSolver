@@ -1,5 +1,4 @@
 //Solves a typical 9x9 sudoku puzzle.
-//Contains a convertToInt method because all values in the puzzle are stored as char
 import java.util.Scanner;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -11,32 +10,34 @@ public class SudokuSolver {
 
 		String fileName = "";						//filename
 		Vector<Character> puzzleVector = new Vector<Character>();	//vector to hold puzzle data
-		char[][] puzzleArray;						//array to hold/display puzzle
+		char[][] puzzleArray;						//2D array to hold/display puzzle
 			
 		System.out.println("Sudoku Solver\n");
 		
-		//command line input
+		//get file name from command line input if entered
 		if(args.length == 1) {
 			fileName = args[0];
 		}
-		//user input
+		//otherwise, get file name from user input
 		else {
 			System.out.println("Enter a file name: ");
 			Scanner input = new Scanner(System.in);
 			fileName = input.nextLine();
 		}
-		//open file
+		//open file with sudoku puzzle input
 		try {
 			File inputFile = new File(fileName);
 			Scanner f = new Scanner(inputFile);
+			//get each number in the input file in while loop
 			while(f.hasNext()) {
-				//store the next number/character in puzzleVector
+				//put each number/character in puzzleVector as a char type
 				puzzleVector.addElement(f.next().charAt(0));		
 			}
 			 
-			//trim the vector and find the dimensions of the puzzle and instantiate 2D array with dimensions
+			//trim the vector and find the dimensions of the puzzle
 			puzzleVector.trimToSize();
 			double dimension = Math.sqrt((puzzleVector.capacity()));
+			//create array to hold the puzzle
 			puzzleArray = new char[(int)dimension][(int)dimension];	
 			
 			//put vector into 2D array
@@ -48,25 +49,25 @@ public class SudokuSolver {
 			/********************
 			 * Solve the puzzle *
 			 *******************/
-			long t1 = System.currentTimeMillis();	//timer
+			long t1 = System.currentTimeMillis();	//timer for experiments
 
 			//display when solved
 			if(solvePuzzle(puzzleArray, (int)dimension)) {
 				System.out.println("\nSolved successfully");
 				displayArray(puzzleArray, (int)dimension);
 			}
-
+			//otherwise, display board is unsolvable
 			else {
 				System.out.println("Unsolvable board.");
 			}
 			
-			//get final execution time
-			long t2 = System.currentTimeMillis(); 	//timer
-			System.out.println("The elapsed time  is " + (t2-t1)/1000. + " seconds.");
+			
+			long t2 = System.currentTimeMillis(); 	//timer for experiments
+			System.out.println("The elapsed time  is " + (t2-t1)/1000. + " seconds."); //display elapsed time
 
 			
 		}
-		//exception
+		//exception catching
 		catch (FileNotFoundException fnfe) {
 			System.out.println("File not found.");
 			System.exit(0);
@@ -76,9 +77,9 @@ public class SudokuSolver {
 	/**********************
 	 * solvePuzzle method *
 	 **********************/
-	//recursive algorithm to solve a puzzle
+	//recursive algorithm to solve a sudoku puzzle
 	public static boolean solvePuzzle(char[][] array, int dimension) {
-		
+		//go through each element of the puzzle with the nested for loops
 		for(int row = 0; row < dimension; row++) {
 			for(int column = 0; column < dimension; column++) {
 				
@@ -98,10 +99,12 @@ public class SudokuSolver {
 							}
 						}
 					}
+					//return false is puzzle isn't solved
 					return false;
 				}
 			}
 		}
+		//return true when puzzle is solved.
 		return true;
 	}
 	/***************************
@@ -121,21 +124,21 @@ public class SudokuSolver {
 	/************************
 	 * isValidPuzzle method *
 	 ************************/
-	//will return true if there are no problems
+	//will return true if puzzle is solved correctly 
 	public static boolean isValidPuzzle(char[][] array, int row, int column, int number, int dimension) {
-		//check row
+		//check row for no repeated numbers
 		for(int i = 0; i < array.length; i++) {
 			if(array[row][i] == number) {
 				return true;
 			}
 		}
-		//check column
+		//check column for no repeated numbers
 		for(int j = 0; j < array.length; j++) {
 			if(array[j][column] == number) {
 				return true;
 			}
 		}
-		//check grid
+		//check grid for no repeated numbers
 		int squareRow = row - row % 3;
 		int squareCol = column - column % 3;
 		for(int k = squareRow; k < squareRow + 3; k++) {
@@ -145,6 +148,7 @@ public class SudokuSolver {
 				}
 			}
 		}
+		//returns false if puzzle is invalid
 		return false;
 		
 	}	
@@ -187,16 +191,18 @@ public class SudokuSolver {
 	/*******************************************
 	 * displayArray and displayUnsolved method *
 	 *******************************************/
+	//displays the solved puzzle (solved puzzles have char values instead of int, so they display differently)
 	public static void displayArray(char[][] array, int dimension) {
 		
 		for(int i = 0; i < array.length; i++) {
 			for(int j=0; j < array.length; j++) {
+				//convert each char of the array to an int.
 				System.out.printf("%2s", convertToInt(array[i][j]));
 			}
 			System.out.println();
 		}
 	}
-	 
+	 //displays unsolved puzzle. (unsolved puzzles have their original int values still, so they display normally)
 	public static void displayUnsolved(char[][] array, int dimension) {
 		for(int i = 0; i < array.length; i++) {
 			for(int j=0; j < array.length; j++) {
